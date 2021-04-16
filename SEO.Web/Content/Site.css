@@ -1,0 +1,136 @@
+﻿/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+	padding-top: 50px;
+	padding-bottom: 20px;
+	font-size: 16px;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+	padding-left: 15px;
+	padding-right: 15px;
+	min-height: 100vh;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+	.jumbotron {
+		margin-top: 20px;
+	}
+
+	.body-content {
+		padding: 0;
+	}
+}
+
+.c-border {
+	border: solid 1px grey;
+	border-radius: 0.5rem;
+	padding: 1em;
+}
+
+.c-with-spacer {
+	margin-bottom: 3rem !important;
+}
+
+.c-with-spacer-half {
+	margin-bottom: 1.5rem !important;
+}
+
+.c-center {
+	width: fit-content;
+	margin: auto;
+}
+
+.c-tab-group {
+	width: 50%;
+	margin: auto;
+	text-align: center;
+}
+
+	.c-tab-group .c-tab {
+		border: solid 1px grey;
+		font-size: 2em;
+	}
+
+		.c-tab-group .c-tab:first-child {
+			border-radius: 0.5rem 0 0 0.5rem;
+		}
+
+
+		.c-tab-group .c-tab:last-child {
+			border-radius: 0 0.5rem 0.5rem 0;
+		}
+
+.c-tab {
+	cursor: pointer;
+}
+
+	.c-tab.active {
+		background-color: lightgrey;
+		cursor: default;
+	}
+
+.c-tab-content {
+	width: 80%;
+	margin: auto;
+	text-align: center;
+}
+
+	.c-tab-content textarea {
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+		width: 100%;
+		padding: 1em;
+		min-height: 20em;
+		resize: none;
+		border-radius: 0.5rem;
+	}
+
+	.c-tab-content input {
+		width: 50%;
+		height: 3em;
+		text-align: center;
+		border-radius: 0.5rem;
+	}
+
+#submit-container {
+	font-size: 1.25em;
+}
+
+	#submit-container input[type='checkbox'] {
+		margin-right: 0.5em;
+		cursor: pointer;
+	}
+
+		#submit-container input[type='checkbox'] + label {
+			cursor: pointer;
+			font-weight: normal;
+		}
+
+	#submit-container input[type='submit'] {
+		background-color: white;
+		border-radius: 0.5rem;
+		border: 1px solid grey;
+		font-size: 1.5em;
+	}
+
+
+#MainContent_ResultsSection > div {
+	display: inline-block;
+	vertical-align: top;
+	margin: 0 5rem;
+}
+
+#MainContent_ResultsSection tbody {
+	display: block;
+	height: 500px;
+	overflow-y: auto;
+}
+
+#MainContent_ResultsSection td, #MainContent_ResultsSection th {
+	padding: 1em;
+	text-align: center;
+}
