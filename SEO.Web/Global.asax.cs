@@ -2,10 +2,12 @@
 using SEO.Service.Interfaces;
 using SEO.Service.Services;
 using System;
+using System.Net.Http;
 using System.Web;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Unity;
+using Unity.Injection;
 
 namespace SEO.Web
 {
@@ -23,8 +25,8 @@ namespace SEO.Web
 		{
 			var container = this.AddUnity();
 
-			container.RegisterType<ITextAnalysisService, AnalysisService>();
-			container.RegisterType<IURLAnalysisService, AnalysisService>();
+			container.RegisterType<ITextAnalysisService, TextAnalysisService>();
+			container.RegisterType<IUrlAnalysisService, UrlAnalysisService>();
 		}
 	}
 }

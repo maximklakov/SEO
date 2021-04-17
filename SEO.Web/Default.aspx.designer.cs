@@ -51,13 +51,13 @@ namespace SEO.Web
 		protected global::System.Web.UI.WebControls.TextBox InputText;
 
 		/// <summary>
-		/// InputURL control.
+		/// InputUrl control.
 		/// </summary>
 		/// <remarks>
 		/// Auto-generated field.
 		/// To modify move field declaration from designer file to code-behind file.
 		/// </remarks>
-		protected global::System.Web.UI.WebControls.TextBox InputURL;
+		protected global::System.Web.UI.WebControls.TextBox InputUrl;
 
 		/// <summary>
 		/// FilterStopWords control.
@@ -105,6 +105,24 @@ namespace SEO.Web
 		protected global::System.Web.UI.HtmlControls.HtmlGenericControl ResultsSection;
 
 		/// <summary>
+		/// LinksCountSection control.
+		/// </summary>
+		/// <remarks>
+		/// Auto-generated field.
+		/// To modify move field declaration from designer file to code-behind file.
+		/// </remarks>
+		protected global::System.Web.UI.HtmlControls.HtmlGenericControl LinksCountSection;
+
+		/// <summary>
+		/// LinksCount control.
+		/// </summary>
+		/// <remarks>
+		/// Auto-generated field.
+		/// To modify move field declaration from designer file to code-behind file.
+		/// </remarks>
+		protected global::System.Web.UI.WebControls.Label LinksCount;
+
+		/// <summary>
 		/// WordsCountSection control.
 		/// </summary>
 		/// <remarks>
@@ -123,21 +141,21 @@ namespace SEO.Web
 		protected global::System.Web.UI.WebControls.GridView WordsCount;
 
 		/// <summary>
-		/// LinksCountSection control.
+		/// KeywordsCountSection control.
 		/// </summary>
 		/// <remarks>
 		/// Auto-generated field.
 		/// To modify move field declaration from designer file to code-behind file.
 		/// </remarks>
-		protected global::System.Web.UI.HtmlControls.HtmlGenericControl LinksCountSection;
+		protected global::System.Web.UI.HtmlControls.HtmlGenericControl KeywordsCountSection;
 
 		/// <summary>
-		/// LinksCount control.
+		/// KeywordsCount control.
 		/// </summary>
 		/// <remarks>
 		/// Auto-generated field.
 		/// To modify move field declaration from designer file to code-behind file.
 		/// </remarks>
-		protected global::System.Web.UI.WebControls.Label LinksCount;
+		protected global::System.Web.UI.WebControls.GridView KeywordsCount;
 	}
 }

@@ -60,7 +60,7 @@ const isValidInput = () => {
 	const input = document.getElementById(`Input${capitalizedSelectedTab}`);
 
 	if (!input.value) {
-		setErrorMessage("Please fill in the text input.");
+		setErrorMessage("Please fill in the input.");
 		return false;
 	}
 

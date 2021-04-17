@@ -5,7 +5,7 @@ namespace SEO.Service.Interfaces
 {
 	public interface ITextAnalysisService
 	{
-		IEnumerable<WordsCount> GetWordsCount(string text, bool isFilterOutStopWords);
-		int GetLinksCount(IEnumerable<WordsCount> wordsCount);
+		IEnumerable<WordsCount> GetWordsCountData(string text, bool isFilterOutStopWords);
+		int GetTextLinksCount(IEnumerable<WordsCount> wordsCount);
 	}
 }

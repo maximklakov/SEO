@@ -118,15 +118,13 @@ body {
 	}
 
 
-#MainContent_ResultsSection > div {
-	display: inline-block;
-	vertical-align: top;
-	margin: 0 5rem;
+#MainContent_ResultsSection table {
+	margin: auto;
 }
 
 #MainContent_ResultsSection tbody {
-	display: block;
-	height: 500px;
+	display: inline-block;
+	max-height: 500px;
 	overflow-y: auto;
 }
 

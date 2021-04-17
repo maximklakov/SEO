@@ -2,29 +2,28 @@
 using SEO.Service.Models;
 using System;
 using System.Collections.Generic;
-using System.Web.UI;
 using System.Linq;
-using System.Reflection;
+using System.Threading.Tasks;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace SEO.Web
 {
 	public partial class Default : Page
 	{
-		private readonly ITextAnalysisService _analysisService;
+		private const string SortDirectionKeyPrefix = "SortDirection_";
 
-		private string[] SelectedCalculationOptions =>
-			CalcOptions.Items.Cast<ListItem>()
-			.Where(item => item.Selected)
-			.Select(item => item.Value)
-			.ToArray();
+		private readonly ITextAnalysisService _textAnalysisService;
+		private readonly IUrlAnalysisService _urlAnalysisService;
 
-		public Default(ITextAnalysisService analysisService) => _analysisService = analysisService;
-
-		protected void Page_Load(object sender, EventArgs e)
+		private enum CountType
 		{
-
+			WordsCount,
+			KeywordsCount
 		}
+
+		public Default(ITextAnalysisService textAnalysisService, IUrlAnalysisService urlAnalysisService) =>
+			(_textAnalysisService, _urlAnalysisService) = (textAnalysisService, urlAnalysisService);
 
 		protected void Submit_Click(object sender, EventArgs e)
 		{
@@ -40,73 +39,109 @@ namespace SEO.Web
 			ResultsSection.Visible = true;
 		}
 
-		protected void WordsCount_Sorting(object sender, System.Web.UI.WebControls.GridViewSortEventArgs e)
+		protected void WordsCount_Sorting(object sender, GridViewSortEventArgs e)
 		{
-			var results = (IEnumerable<WordsCount>)ViewState["results"];
+			HandleSorting(CountType.WordsCount, (GridView)sender, e.SortExpression);
+		}
 
-			var sortProp = typeof(WordsCount).GetProperty(e.SortExpression);
-			object sortPropValue(WordsCount result) => sortProp.GetValue(result);
+		protected void KeywordsCount_Sorting(object sender, GridViewSortEventArgs e)
+		{
+			HandleSorting(CountType.KeywordsCount, (GridView)sender, e.SortExpression);
+		}
 
-			if ((SortDirection)ViewState["sortDirection"] == SortDirection.Ascending)
+		private void HandleSorting(CountType ct, GridView gv, string sortExpression)
+		{
+			string countType = Enum.GetName(typeof(CountType), ct);
+			string sortDirectionKey = GetSortDirectionKey(countType);
+
+			var wordsCountData = (IEnumerable<WordsCount>)ViewState[countType];
+
+			var sortProp = typeof(WordsCount).GetProperty(sortExpression);
+			object sortPropValue(WordsCount wordCount) => sortProp.GetValue(wordCount);
+
+			if ((SortDirection)ViewState[sortDirectionKey] == SortDirection.Ascending)
 			{
-				results = results.OrderByDescending(sortPropValue);
-				ViewState["sortDirection"] = SortDirection.Descending;
+				wordsCountData = wordsCountData.OrderByDescending(sortPropValue);
+				ViewState[sortDirectionKey] = SortDirection.Descending;
 			}
 			else
 			{
-				results = results.OrderBy(sortPropValue);
-				ViewState["sortDirection"] = SortDirection.Ascending;
+				wordsCountData = wordsCountData.OrderBy(sortPropValue);
+				ViewState[sortDirectionKey] = SortDirection.Ascending;
 			}
 
-			WordsCount.DataSource = results;
-			WordsCount.DataBind();
-		}
-
-		protected void LinksCount_Sorting(object sender, GridViewSortEventArgs e)
-		{
-			WordsCount_Sorting(sender, e);
+			gv.DataSource = wordsCountData;
+			gv.DataBind();
 		}
 
 		private bool IsValidDataInputs()
 		{
-			if (string.IsNullOrWhiteSpace(InputText.Text) || CalcOptions.SelectedIndex == -1)
+			if (CalcOptions.SelectedIndex == -1)
 				return false;
 
-			return true;
+			if (SelectedTab.Value == "text")
+				return !string.IsNullOrWhiteSpace(InputText.Text);
+
+			return !string.IsNullOrWhiteSpace(InputUrl.Text);
 		}
 
 		private void AnalyzeText()
 		{
-			var wordsCount = GetWordsCount(InputText.Text);
+			var wordsCountData = _textAnalysisService.GetWordsCountData(InputText.Text, FilterStopWords.Checked);
 
-			if (SelectedCalculationOptions.Contains("words"))
-				ShowWordsCount(wordsCount);
+			var selectedCalculationOptions = GetSelectedCalculationOptions();
 
-			if (SelectedCalculationOptions.Contains("links"))
-				ShowLinksCount(_analysisService.GetLinksCount(wordsCount));
+			Task.WaitAll(
+				Task.Run(() =>
+				{
+					if (selectedCalculationOptions.Contains("words"))
+						ShowWordsCount(wordsCountData);
+				}),
+				Task.Run(() =>
+				{
+					if (selectedCalculationOptions.Contains("links"))
+					{
+						ShowLinksCount(_textAnalysisService.GetTextLinksCount(wordsCountData));
+					}
+				})
+			);
 		}
 
 		private void AnalyzeURL()
 		{
+			var htmlContent = _urlAnalysisService.GetHtmlContentFromURL(InputUrl.Text);
 
-		}
+			var wordsCountData = _urlAnalysisService.GetWordsCountDataFromHtmlContent(htmlContent, FilterStopWords.Checked);
 
-		private WordsCount[] GetWordsCount(string text)
-		{
-			return _analysisService.GetWordsCount(text, FilterStopWords.Checked)
-				.OrderByDescending(result => result.Count)
-				.ToArray();
-		}
+			var selectedCalculationOptions = GetSelectedCalculationOptions();
 
-		private void ShowWordsCount(WordsCount[] wordsCount)
-		{
-			WordsCount.DataSource = wordsCount;
-			WordsCount.DataBind();
+			Task.WaitAll(
+				Task.Run(() =>
+				{
+					if (selectedCalculationOptions.Contains("words"))
+						ShowWordsCount(wordsCountData);
+				}),
+				Task.Run(() =>
+				{
+					if (selectedCalculationOptions.Contains("links"))
+					{
+						var linksCount = Task.Run(() => _urlAnalysisService.GetTextLinksCount(wordsCountData));
+						var anchorLinksCount = Task.Run(() => _urlAnalysisService.GetAnchorLinksCountFromHtmlContent(htmlContent));
 
-			ViewState["results"] = wordsCount.ToArray();
-			ViewState["sortDirection"] = SortDirection.Descending;
-
-			WordsCountSection.Visible = true;
+						ShowLinksCount(linksCount.Result + anchorLinksCount.Result);
+					}
+				}),
+				Task.Run(() =>
+				{
+					if (selectedCalculationOptions.Contains("keywords"))
+					{
+						var keywordsCountData =
+							_urlAnalysisService.GetKeywordsCountDataFromHtmlContent(htmlContent, FilterStopWords.Checked);
+						
+						ShowKeywordsCount(keywordsCountData);
+					}
+				})
+			);
 		}
 
 		private void ShowLinksCount(int linksCount)
@@ -114,5 +149,38 @@ namespace SEO.Web
 			LinksCount.Text = linksCount.ToString();
 			LinksCountSection.Visible = true;
 		}
+
+		private void ShowWordsCount(IEnumerable<WordsCount> wordsCountData)
+		{
+			LoadWordsCountData(CountType.WordsCount, WordsCount, wordsCountData);
+			WordsCountSection.Visible = true;
+		}
+
+		private void ShowKeywordsCount(IEnumerable<WordsCount> keywordsCountData)
+		{
+			LoadWordsCountData(CountType.KeywordsCount, KeywordsCount, keywordsCountData);
+			KeywordsCountSection.Visible = true;
+		}
+
+		private void LoadWordsCountData(CountType ct, GridView gv, IEnumerable<WordsCount> wordsCountData)
+		{
+			string countType = Enum.GetName(typeof(CountType), ct);
+			string sortDirectionKey = GetSortDirectionKey(countType);
+
+			gv.DataSource = wordsCountData;
+			gv.DataBind();
+
+			ViewState[countType] = wordsCountData.ToArray();
+			ViewState[sortDirectionKey] = SortDirection.Descending;
+		}
+
+		private string[] GetSelectedCalculationOptions() =>
+			CalcOptions.Items.Cast<ListItem>()
+				.Where(item => item.Selected)
+				.Select(item => item.Value)
+				.ToArray();
+
+		private string GetSortDirectionKey(string countType) => $"{SortDirectionKeyPrefix}{countType}";
+
 	}
 }
