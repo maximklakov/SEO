@@ -1,36 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <TextAnalysisServiceTestData>
-	<GetWordCountData_DataDriven text="power and digital or experience" isFilterOutStopWords="false">
+	<GetWordsCountData_DataDriven text="power and digital or experience" isFilterOutStopWords="false">
 		<Expected word="power" count="1" />
 		<Expected word="or" count="1" />
 		<Expected word="digital" count="1" />
 		<Expected word="and" count="1" />
 		<Expected word="experience" count="1" />
-	</GetWordCountData_DataDriven>
-	<GetWordCountData_DataDriven text="power and digital or experience" isFilterOutStopWords="true">
+	</GetWordsCountData_DataDriven>
+	<GetWordsCountData_DataDriven text="power and digital or experience" isFilterOutStopWords="true">
 		<Expected word="power" count="1" />
 		<Expected word="digital" count="1" />
 		<Expected word="experience" count="1" />
-	</GetWordCountData_DataDriven>
-	<GetWordCountData_DataDriven text="power,digital experience" isFilterOutStopWords="false">
+	</GetWordsCountData_DataDriven>
+	<GetWordsCountData_DataDriven text="power,digital experience" isFilterOutStopWords="false">
 		<Expected word="power,digital" count="1" />
 		<Expected word="experience" count="1" />
-	</GetWordCountData_DataDriven>
-	<GetWordCountData_DataDriven text="power digital experience digital" isFilterOutStopWords="false">
+	</GetWordsCountData_DataDriven>
+	<GetWordsCountData_DataDriven text="power digital experience digital" isFilterOutStopWords="false">
 		<Expected word="power" count="1" />
 		<Expected word="digital" count="2" />
 		<Expected word="experience" count="1" />
-	</GetWordCountData_DataDriven>
-	<GetWordCountData_DataDriven text="power digital Experience DIGITAL" isFilterOutStopWords="false">
+	</GetWordsCountData_DataDriven>
+	<GetWordsCountData_DataDriven text="power digital Experience DIGITAL" isFilterOutStopWords="false">
 		<Expected word="power" count="1" />
 		<Expected word="digital" count="2" />
 		<Expected word="experience" count="1" />
-	</GetWordCountData_DataDriven>
-	<GetWordCountData_DataDriven text="power   digital    experience     " isFilterOutStopWords="false">
+	</GetWordsCountData_DataDriven>
+	<GetWordsCountData_DataDriven text="power   digital    experience     " isFilterOutStopWords="false">
 		<Expected word="power" count="1" />
 		<Expected word="digital" count="1" />
 		<Expected word="experience" count="1" />
-	</GetWordCountData_DataDriven>
+	</GetWordsCountData_DataDriven>
 
 	<GetTextLinksCount_DataDriven expected="0">
 		<WordCount word="power" count="1" />
