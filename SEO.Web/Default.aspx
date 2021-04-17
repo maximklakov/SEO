@@ -18,6 +18,10 @@
 			</div>
 		</div>
 
+		<div class="c-with-spacer-half text-center">
+			<asp:Label runat="server" ID="ErrorMessage" ClientIDMode="Static" ForeColor="Red" />
+		</div>
+
 		<div id="tab-text-content" class="c-tab-content c-with-spacer" hidden>
 			<asp:TextBox runat="server" ID="InputText" ClientIDMode="Static" TextMode="MultiLine" />
 		</div>
@@ -45,9 +49,6 @@
 				</div>
 
 				<div class="c-center text-center">
-					<div class="c-with-spacer-half">
-						<asp:Label runat="server" ID="ErrorMessage" ClientIDMode="Static" ForeColor="Red" />
-					</div>
 					<asp:Button runat="server" ID="Submit" ClientIDMode="Static" Text="Submit"
 						OnClick="Submit_Click" OnClientClick="return onClickSubmit();" />
 				</div>
@@ -88,7 +89,7 @@
 			</asp:GridView>
 			<hr />
 		</div>
-		
+
 		<a href="/">Go Back To Home</a>
 	</section>
 

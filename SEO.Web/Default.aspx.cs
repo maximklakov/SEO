@@ -30,13 +30,15 @@ namespace SEO.Web
 			if (!IsValidDataInputs())
 				return;
 
-			if (SelectedTab.Value == "text")
-				AnalyzeText();
-			else
-				AnalyzeURL();
+			bool isSuccess = SelectedTab.Value == "text"
+				? AnalyzeText()
+				: AnalyzeURL();
 
-			InputSection.Visible = false;
-			ResultsSection.Visible = true;
+			if (isSuccess)
+			{
+				InputSection.Visible = false;
+				ResultsSection.Visible = true;
+			}
 		}
 
 		protected void WordsCount_Sorting(object sender, GridViewSortEventArgs e)
@@ -54,10 +56,10 @@ namespace SEO.Web
 			string countType = Enum.GetName(typeof(CountType), ct);
 			string sortDirectionKey = GetSortDirectionKey(countType);
 
-			var wordsCountData = (IEnumerable<WordsCount>)ViewState[countType];
+			var wordsCountData = (IEnumerable<WordCount>)ViewState[countType];
 
-			var sortProp = typeof(WordsCount).GetProperty(sortExpression);
-			object sortPropValue(WordsCount wordCount) => sortProp.GetValue(wordCount);
+			var sortProp = typeof(WordCount).GetProperty(sortExpression);
+			object sortPropValue(WordCount wordCount) => sortProp.GetValue(wordCount);
 
 			if ((SortDirection)ViewState[sortDirectionKey] == SortDirection.Ascending)
 			{
@@ -85,7 +87,7 @@ namespace SEO.Web
 			return !string.IsNullOrWhiteSpace(InputUrl.Text);
 		}
 
-		private void AnalyzeText()
+		private bool AnalyzeText()
 		{
 			var wordsCountData = _textAnalysisService.GetWordsCountData(InputText.Text, FilterStopWords.Checked);
 
@@ -105,11 +107,19 @@ namespace SEO.Web
 					}
 				})
 			);
+
+			return true;
 		}
 
-		private void AnalyzeURL()
+		private bool AnalyzeURL()
 		{
 			var htmlContent = _urlAnalysisService.GetHtmlContentFromURL(InputUrl.Text);
+
+			if (string.IsNullOrWhiteSpace(htmlContent))
+			{
+				ErrorMessage.Text = "Cannot fetch the URL content. Please check if the URL is correct.";
+				return false;
+			}
 
 			var wordsCountData = _urlAnalysisService.GetWordsCountDataFromHtmlContent(htmlContent, FilterStopWords.Checked);
 
@@ -137,11 +147,13 @@ namespace SEO.Web
 					{
 						var keywordsCountData =
 							_urlAnalysisService.GetKeywordsCountDataFromHtmlContent(htmlContent, FilterStopWords.Checked);
-						
+
 						ShowKeywordsCount(keywordsCountData);
 					}
 				})
 			);
+
+			return true;
 		}
 
 		private void ShowLinksCount(int linksCount)
@@ -150,19 +162,19 @@ namespace SEO.Web
 			LinksCountSection.Visible = true;
 		}
 
-		private void ShowWordsCount(IEnumerable<WordsCount> wordsCountData)
+		private void ShowWordsCount(IEnumerable<WordCount> wordsCountData)
 		{
 			LoadWordsCountData(CountType.WordsCount, WordsCount, wordsCountData);
 			WordsCountSection.Visible = true;
 		}
 
-		private void ShowKeywordsCount(IEnumerable<WordsCount> keywordsCountData)
+		private void ShowKeywordsCount(IEnumerable<WordCount> keywordsCountData)
 		{
 			LoadWordsCountData(CountType.KeywordsCount, KeywordsCount, keywordsCountData);
 			KeywordsCountSection.Visible = true;
 		}
 
-		private void LoadWordsCountData(CountType ct, GridView gv, IEnumerable<WordsCount> wordsCountData)
+		private void LoadWordsCountData(CountType ct, GridView gv, IEnumerable<WordCount> wordsCountData)
 		{
 			string countType = Enum.GetName(typeof(CountType), ct);
 			string sortDirectionKey = GetSortDirectionKey(countType);

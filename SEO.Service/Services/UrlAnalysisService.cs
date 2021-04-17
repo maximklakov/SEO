@@ -12,10 +12,19 @@ namespace SEO.Service.Services
 	{
 		public string GetHtmlContentFromURL(string url)
 		{
-			return new HttpClient().GetStringAsync(url).Result;
+			if (!Uri.TryCreate(url, UriKind.Absolute, out Uri uri)
+				|| !new[] { Uri.UriSchemeHttp, Uri.UriSchemeHttps }.Contains(uri.Scheme))
+				return "";
+
+			string result = "";
+
+			try { result = new HttpClient().GetStringAsync(url).Result; }
+			catch (Exception) { }
+
+			return result;
 		}
 
-		public IEnumerable<WordsCount> GetWordsCountDataFromHtmlContent(string htmlContent, bool isFilterOutStopWords)
+		public IEnumerable<WordCount> GetWordsCountDataFromHtmlContent(string htmlContent, bool isFilterOutStopWords)
 		{
 			var htmlDoc = GetHtmlDocument(htmlContent);
 
@@ -33,7 +42,7 @@ namespace SEO.Service.Services
 			return GetWordsCountData(textContent, isFilterOutStopWords);
 		}
 
-		public IEnumerable<WordsCount> GetKeywordsCountDataFromHtmlContent(string htmlContent, bool isFilterOutStopWords)
+		public IEnumerable<WordCount> GetKeywordsCountDataFromHtmlContent(string htmlContent, bool isFilterOutStopWords)
 		{
 			var htmlDoc = GetHtmlDocument(htmlContent);
 
@@ -42,7 +51,7 @@ namespace SEO.Service.Services
 						&& n.GetAttributeValue("name", "").Equals("keywords", StringComparison.OrdinalIgnoreCase))
 				.Select(n => n.GetAttributeValue("content", ""));
 
-			string keywords = String.Join(" ", keywordsList).Replace(",", " ");
+			string keywords = string.Join(" ", keywordsList).Replace(",", " ");
 
 			return GetWordsCountData(keywords, isFilterOutStopWords);
 		}

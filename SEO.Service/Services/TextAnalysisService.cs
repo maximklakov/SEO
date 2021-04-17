@@ -17,18 +17,18 @@ namespace SEO.Service.Services
 				@"http(s)?:\/\/[\w][\w.-]*(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+.*$",
 				RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-		public IEnumerable<WordsCount> GetWordsCountData(string text, bool isFilterOutStopWords)
+		public IEnumerable<WordCount> GetWordsCountData(string text, bool isFilterOutStopWords)
 		{
 			string filteredText = text.ToLower();
 
 			if (isFilterOutStopWords)
-				filteredText = text.RemoveStopWords("en");
+				filteredText = filteredText.RemoveStopWords("en");
 
 			return filteredText
 				.Replace(Environment.NewLine, " ")
 				.Split(' ')
 				.GroupBy(word => word)
-				.Select(wordGroup => new WordsCount
+				.Select(wordGroup => new WordCount
 				{
 					Word = wordGroup.Key,
 					Count = wordGroup.Count()
@@ -37,12 +37,12 @@ namespace SEO.Service.Services
 				.OrderByDescending(result => result.Count);
 		}
 
-		public int GetTextLinksCount(IEnumerable<WordsCount> wordsCount)
+		public int GetTextLinksCount(IEnumerable<WordCount> wordsCountData)
 		{
-			return wordsCount.Where(item => IsContainingURL(item.Word)).Sum(item => item.Count);
+			return wordsCountData.Where(item => IsContainingURL(item.Word)).Sum(item => item.Count);
 		}
 
-		protected bool IsContainingURL(string text)
+		protected internal bool IsContainingURL(string text)
 		{
 			return _urlRegex.IsMatch(text);
 		}

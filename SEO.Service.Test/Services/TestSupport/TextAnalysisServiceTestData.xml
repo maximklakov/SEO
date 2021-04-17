@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TextAnalysisServiceTestData>
+	<GetWordCountData_DataDriven text="power and digital or experience" isFilterOutStopWords="false">
+		<Expected word="power" count="1" />
+		<Expected word="or" count="1" />
+		<Expected word="digital" count="1" />
+		<Expected word="and" count="1" />
+		<Expected word="experience" count="1" />
+	</GetWordCountData_DataDriven>
+	<GetWordCountData_DataDriven text="power and digital or experience" isFilterOutStopWords="true">
+		<Expected word="power" count="1" />
+		<Expected word="digital" count="1" />
+		<Expected word="experience" count="1" />
+	</GetWordCountData_DataDriven>
+	<GetWordCountData_DataDriven text="power,digital experience" isFilterOutStopWords="false">
+		<Expected word="power,digital" count="1" />
+		<Expected word="experience" count="1" />
+	</GetWordCountData_DataDriven>
+	<GetWordCountData_DataDriven text="power digital experience digital" isFilterOutStopWords="false">
+		<Expected word="power" count="1" />
+		<Expected word="digital" count="2" />
+		<Expected word="experience" count="1" />
+	</GetWordCountData_DataDriven>
+	<GetWordCountData_DataDriven text="power digital Experience DIGITAL" isFilterOutStopWords="false">
+		<Expected word="power" count="1" />
+		<Expected word="digital" count="2" />
+		<Expected word="experience" count="1" />
+	</GetWordCountData_DataDriven>
+	<GetWordCountData_DataDriven text="power   digital    experience     " isFilterOutStopWords="false">
+		<Expected word="power" count="1" />
+		<Expected word="digital" count="1" />
+		<Expected word="experience" count="1" />
+	</GetWordCountData_DataDriven>
+
+	<GetTextLinksCount_DataDriven expected="0">
+		<WordCount word="power" count="1" />
+		<WordCount word="or" count="1" />
+		<WordCount word="digital" count="1" />
+	</GetTextLinksCount_DataDriven>
+	<GetTextLinksCount_DataDriven expected="1">
+		<WordCount word="power" count="1" />
+		<WordCount word="http://test.com" count="1" />
+		<WordCount word="digital" count="1" />
+	</GetTextLinksCount_DataDriven>
+	<GetTextLinksCount_DataDriven expected="3">
+		<WordCount word="power" count="1" />
+		<WordCount word="http://test.com" count="1" />
+		<WordCount word="digital" count="1" />
+		<WordCount word="http://test2.com" count="2" />
+	</GetTextLinksCount_DataDriven>
+	<GetTextLinksCount_DataDriven expected="2">
+		<WordCount word="power" count="1" />
+		<WordCount word="http://test.com" count="1" />
+		<WordCount word="digital" count="1" />
+		<WordCount word="goto:http://test.com" count="1" />
+	</GetTextLinksCount_DataDriven>
+
+
+	<IsContainingURL_DataDriven text="http://test.com" expected="true" />
+	<IsContainingURL_DataDriven text="https://test.com" expected="true" />
+	<IsContainingURL_DataDriven text="https://test.com/test" expected="true" />
+	<IsContainingURL_DataDriven text="https://test.com?id=test" expected="true" />
+	<IsContainingURL_DataDriven text="https://test.com#test" expected="true" />
+	<IsContainingURL_DataDriven text="https://test.org" expected="true" />
+	<IsContainingURL_DataDriven text='"https://test.com"' expected="true" />
+	<IsContainingURL_DataDriven text="goto:https://test.com" expected="true" />
+	<IsContainingURL_DataDriven text="ftp://test.com" expected="false" />
+	<IsContainingURL_DataDriven text="https://-test.com" expected="false" />
+	<IsContainingURL_DataDriven text="https://test." expected="false" />
+	<IsContainingURL_DataDriven text="https://test" expected="false" />
+	<IsContainingURL_DataDriven text="https://" expected="false" />
+	<IsContainingURL_DataDriven text="" expected="false" />
+</TextAnalysisServiceTestData>

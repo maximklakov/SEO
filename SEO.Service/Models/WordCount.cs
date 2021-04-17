@@ -3,7 +3,7 @@
 namespace SEO.Service.Models
 {
 	[Serializable]
-	public class WordsCount
+	public class WordCount
 	{
 		public string Word { get; set; }
 		public int Count { get; set; }

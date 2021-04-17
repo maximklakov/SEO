@@ -29,6 +29,8 @@ const handleTabsStyle = (selectedTab) => {
 		tab.classList.remove(TAB_ACTIVE_CSS);
 		tabContent.hidden = true;
 	});
+
+	setErrorMessage('');
 }
 
 const prepareCalculationOptions = () => {
@@ -44,13 +46,10 @@ const prepareCalculationOptions = () => {
 
 
 const onClickSubmit = () => {
-	if (!isValidInput())
+	if (!isValidInput() || !isCalcOptionSelected())
 		return false;
 
-	if (!isCalcOptionSelected())
-		return false;
-
-	setErrorMessage("");
+	setErrorMessage('');
 	return true;
 }
 
@@ -60,18 +59,26 @@ const isValidInput = () => {
 	const input = document.getElementById(`Input${capitalizedSelectedTab}`);
 
 	if (!input.value) {
-		setErrorMessage("Please fill in the input.");
+		setErrorMessage('Please fill in the input.');
+		return false;
+	}
+
+	if (selectedTab === 'url' && !isValidURL(input.value)) {
+		setErrorMessage('Please fill in with valid URL.');
 		return false;
 	}
 
 	return true;
 }
 
+const URL_REGEX = /http(s)?:\/\/[\w][\w.-]*(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+.*$/;
+const isValidURL = (text) => URL_REGEX.test(text);
+
 const isCalcOptionSelected = () => {
 	const checkboxes = [...getCheckboxList().getElementsByTagName('input')];
 
 	if (checkboxes.every(checkbox => !checkbox.checked)) {
-		setErrorMessage("Please select at least 1 calculation option.");
+		setErrorMessage('Please select at least 1 calculation option.');
 		return false;
 	}
 
