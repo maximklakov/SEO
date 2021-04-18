@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -12,6 +13,8 @@ namespace SEO.Web
 	public partial class Default : Page
 	{
 		private const string SortDirectionKeyPrefix = "SortDirection_";
+		private const string UnsafeErrorKey = "UNSAFE";
+		private const string UnknownErrorKey = "UNSAFE";
 
 		private readonly ITextAnalysisService _textAnalysisService;
 		private readonly IUrlAnalysisService _urlAnalysisService;
@@ -24,6 +27,36 @@ namespace SEO.Web
 
 		public Default(ITextAnalysisService textAnalysisService, IUrlAnalysisService urlAnalysisService) =>
 			(_textAnalysisService, _urlAnalysisService) = (textAnalysisService, urlAnalysisService);
+
+		protected void Page_Load(object sender, EventArgs e)
+		{
+			if (!IsPostBack && !string.IsNullOrEmpty(Request.QueryString["err"]))
+				HandlePageError();
+		}
+
+		private void HandlePageError()
+		{
+			switch (Request.QueryString["err"])
+			{
+				case UnsafeErrorKey:
+					ErrorMessage.Text = "Some unsafe scripts or tags are detected in your input. Please retype your input.";
+					return;
+				default:
+					ErrorMessage.Text = $"Something went wrong while processing your request. Please try again.";
+					return;
+			}
+		}
+
+		protected void Page_Error(object sender, EventArgs e)
+		{
+			string errorKey = UnknownErrorKey;
+
+			if (Server.GetLastError() is HttpRequestValidationException)
+				errorKey = UnsafeErrorKey;
+
+			Server.ClearError();
+			Response.Redirect($"?err={errorKey}");
+		}
 
 		protected void Submit_Click(object sender, EventArgs e)
 		{
