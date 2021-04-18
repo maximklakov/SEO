@@ -10,15 +10,18 @@ namespace SEO.Service.Services
 {
 	public class UrlAnalysisService : TextAnalysisService, IUrlAnalysisService
 	{
+		private readonly IHttpClientHelper _httpClientHelper;
+
+		public UrlAnalysisService(IHttpClientHelper httpClientHelper) => _httpClientHelper = httpClientHelper;
+
 		public string GetHtmlContentFromURL(string url)
 		{
-			if (!Uri.TryCreate(url, UriKind.Absolute, out Uri uri)
-				|| !new[] { Uri.UriSchemeHttp, Uri.UriSchemeHttps }.Contains(uri.Scheme))
-				return "";
-
 			string result = "";
 
-			try { result = new HttpClient().GetStringAsync(url).Result; }
+			if (!url.StartsWith("http", StringComparison.OrdinalIgnoreCase) || !UrlRegex.IsMatch(url) )
+				return result;
+
+			try { result = _httpClientHelper.GetStringAsync(url).Result; }
 			catch (Exception) { }
 
 			return result;

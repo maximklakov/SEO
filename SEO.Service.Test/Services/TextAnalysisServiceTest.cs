@@ -43,8 +43,7 @@ namespace SEO.Service.Test.Services
 				int.TryParse(expected["count"].ToString(), out int expectedCount);
 
 				var wordCount = wordsCountData.FirstOrDefault(res => res.Word == expectedWord);
-				Assert.IsNotNull(wordCount, expectedWord);
-				Assert.AreEqual(expectedCount, wordCount.Count, expectedWord);
+				Assert.AreEqual(expectedCount, wordCount?.Count ?? 0, expectedWord);
 			}
 		}
 

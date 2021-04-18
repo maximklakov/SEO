@@ -50,6 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\HttpClientHelper.cs" />
+    <Compile Include="Interfaces\IHttpClientHelper.cs" />
     <Compile Include="Interfaces\IUrlAnalysisService.cs" />
     <Compile Include="Services\UrlAnalysisService.cs" />
     <Compile Include="Services\TextAnalysisService.cs" />

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.WebFormsDependencyInjection.Unity;
+using SEO.Service.Helpers;
 using SEO.Service.Interfaces;
 using SEO.Service.Services;
 using System;
@@ -26,7 +27,8 @@ namespace SEO.Web
 			var container = this.AddUnity();
 
 			container.RegisterType<ITextAnalysisService, TextAnalysisService>();
-			container.RegisterType<IUrlAnalysisService, UrlAnalysisService>();
+			container.RegisterType<IUrlAnalysisService, UrlAnalysisService>(new InjectionConstructor(typeof(IHttpClientHelper)));
+			container.RegisterType<IHttpClientHelper, HttpClientHelper>();
 		}
 	}
 }

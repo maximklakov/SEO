@@ -9,7 +9,9 @@
 	</GetWordsCountData_DataDriven>
 	<GetWordsCountData_DataDriven text="power and digital or experience" isFilterOutStopWords="true">
 		<Expected word="power" count="1" />
+		<Expected word="or" count="0" />
 		<Expected word="digital" count="1" />
+		<Expected word="and" count="0" />
 		<Expected word="experience" count="1" />
 	</GetWordsCountData_DataDriven>
 	<GetWordsCountData_DataDriven text="power,digital experience" isFilterOutStopWords="false">
@@ -54,7 +56,6 @@
 		<WordCount word="digital" count="1" />
 		<WordCount word="goto:http://test.com" count="1" />
 	</GetTextLinksCount_DataDriven>
-
 
 	<IsContainingURL_DataDriven text="http://test.com" expected="true" />
 	<IsContainingURL_DataDriven text="https://test.com" expected="true" />

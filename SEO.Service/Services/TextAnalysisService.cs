@@ -10,10 +10,10 @@ namespace SEO.Service.Services
 {
 	public class TextAnalysisService : ITextAnalysisService
 	{
-		private readonly Regex _urlRegex;
+		protected readonly Regex UrlRegex;
 
 		public TextAnalysisService() =>
-			_urlRegex = new Regex(
+			UrlRegex = new Regex(
 				@"http(s)?:\/\/[\w][\w.-]*(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+.*$",
 				RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
@@ -44,7 +44,7 @@ namespace SEO.Service.Services
 
 		protected internal bool IsContainingURL(string text)
 		{
-			return _urlRegex.IsMatch(text);
+			return UrlRegex.IsMatch(text);
 		}
 	}
 }

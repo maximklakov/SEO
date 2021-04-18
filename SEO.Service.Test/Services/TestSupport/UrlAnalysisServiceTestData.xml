@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<UrlAnalysisServiceTestData>
+	<GetHtmlContentFromURL_DataDriven text="http://test.com" isValid="true" />
+	<GetHtmlContentFromURL_DataDriven text="https://test.com" isValid="true" />
+	<GetHtmlContentFromURL_DataDriven text="https://test.com/test" isValid="true" />
+	<GetHtmlContentFromURL_DataDriven text="https://test.com?id=test" isValid="true" />
+	<GetHtmlContentFromURL_DataDriven text="https://test.com#test" isValid="true" />
+	<GetHtmlContentFromURL_DataDriven text="https://test.org" isValid="true" />
+	<GetHtmlContentFromURL_DataDriven text='"https://test.com"' isValid="false" />
+	<GetHtmlContentFromURL_DataDriven text="goto:https://test.com" isValid="false" />
+	<GetHtmlContentFromURL_DataDriven text="ftp://test.com" isValid="false" />
+	<GetHtmlContentFromURL_DataDriven text="https://-test.com" isValid="false" />
+	<GetHtmlContentFromURL_DataDriven text="https://test." isValid="false" />
+	<GetHtmlContentFromURL_DataDriven text="https://test" isValid="false" />
+	<GetHtmlContentFromURL_DataDriven text="https://" isValid="false" />
+	<GetHtmlContentFromURL_DataDriven text="" isValid="false" />
+
+	<GetWordsCountDataFromHtmlContent_DataDriven isFilterOutStopWords="false"
+		htmlContent="&lt;script&gt;alert('test');&lt;/script&gt;&lt;div&gt;power&lt;/div&gt;OR&lt;span&gt;digital&lt;/span&gt;AND experience">
+		<ExpectedWordCount word="power" count="1" />
+		<ExpectedWordCount word="or" count="1" />
+		<ExpectedWordCount word="digital" count="1" />
+		<ExpectedWordCount word="and" count="1" />
+		<ExpectedWordCount word="experience" count="1" />
+	</GetWordsCountDataFromHtmlContent_DataDriven>
+	<GetWordsCountDataFromHtmlContent_DataDriven isFilterOutStopWords="true"
+		htmlContent="&lt;script&gt;alert('test');&lt;/script&gt;&lt;div&gt;power&lt;/div&gt;OR&lt;span&gt;digital&lt;/span&gt;AND experience">
+		<ExpectedWordCount word="power" count="1" />
+		<ExpectedWordCount word="or" count="0" />
+		<ExpectedWordCount word="digital" count="1" />
+		<ExpectedWordCount word="and" count="0" />
+		<ExpectedWordCount word="experience" count="1" />
+	</GetWordsCountDataFromHtmlContent_DataDriven>
+	<GetWordsCountDataFromHtmlContent_DataDriven isFilterOutStopWords="false"
+		htmlContent="&lt;script&gt;alert('test');&lt;/script&gt;&lt;div&gt;power&lt;/div&gt;OR&lt;span&gt;digital&lt;/span&gt;&lt;a href='#'&gt;AND experience&lt;/a&gt;">
+		<ExpectedWordCount word="power" count="1" />
+		<ExpectedWordCount word="or" count="1" />
+		<ExpectedWordCount word="digital" count="1" />
+		<ExpectedWordCount word="and" count="1" />
+		<ExpectedWordCount word="experience" count="1" />
+	</GetWordsCountDataFromHtmlContent_DataDriven>
+
+	<GetKeywordsCountDataFromHtmlContent_DataDriven isFilterOutStopWords="false"
+		htmlContent='&lt;meta name="keywords" content="power,or, digital, and,experience" /&gt;&lt;script&gt;alert("test");&lt;/script&gt;&lt;div&gt;power&lt;/div&gt;OR&lt;span&gt;digital&lt;/span&gt;AND experience'>
+		<ExpectedWordCount word="power" count="1" />
+		<ExpectedWordCount word="or" count="1" />
+		<ExpectedWordCount word="digital" count="1" />
+		<ExpectedWordCount word="and" count="1" />
+		<ExpectedWordCount word="experience" count="1" />
+	</GetKeywordsCountDataFromHtmlContent_DataDriven>
+	<GetKeywordsCountDataFromHtmlContent_DataDriven isFilterOutStopWords="true"
+		htmlContent='&lt;meta name="keywords" content="power,or, digital, and,experience" /&gt;'>
+		<ExpectedWordCount word="power" count="1" />
+		<ExpectedWordCount word="or" count="0" />
+		<ExpectedWordCount word="digital" count="1" />
+		<ExpectedWordCount word="and" count="0" />
+		<ExpectedWordCount word="experience" count="1" />
+	</GetKeywordsCountDataFromHtmlContent_DataDriven>
+	<GetKeywordsCountDataFromHtmlContent_DataDriven isFilterOutStopWords="false"
+		htmlContent='&lt;meta name="keywords" content="power,or, digital, and,experience" /&gt;&lt;meta name="keywords" content="digital   ,   experience platform,leader" /&gt;'>
+		<ExpectedWordCount word="power" count="1" />
+		<ExpectedWordCount word="or" count="1" />
+		<ExpectedWordCount word="digital" count="2" />
+		<ExpectedWordCount word="and" count="1" />
+		<ExpectedWordCount word="experience" count="2" />
+		<ExpectedWordCount word="platform" count="1" />
+		<ExpectedWordCount word="leader" count="1" />
+	</GetKeywordsCountDataFromHtmlContent_DataDriven>
+	<GetKeywordsCountDataFromHtmlContent_DataDriven isFilterOutStopWords="false"
+		htmlContent='&lt;meta name="description" content="power,or, digital, and,experience" /&gt;'>
+		<ExpectedWordCount word="power" count="0" />
+		<ExpectedWordCount word="or" count="0" />
+		<ExpectedWordCount word="digital" count="0" />
+		<ExpectedWordCount word="and" count="0" />
+		<ExpectedWordCount word="experience" count="0" />
+	</GetKeywordsCountDataFromHtmlContent_DataDriven>
+
+	<GetAnchorLinksCountFromHtmlContent_DataDriven expected="1"
+		htmlContent="&lt;div&gt;power&lt;/div&gt;OR&lt;a href='#'&gt;AND experience&lt;/a&gt;&lt;span&gt;digital&lt;/span&gt;&lt;a href='https://test.com'&gt;AND experience&lt;/a&gt;">
+	</GetAnchorLinksCountFromHtmlContent_DataDriven>
+	<GetAnchorLinksCountFromHtmlContent_DataDriven expected="1"
+		htmlContent="&lt;div&gt;go to https://test2.com . power&lt;/div&gt;OR&lt;a href='#'&gt;AND experience&lt;/a&gt;&lt;span&gt;digital&lt;/span&gt;&lt;a href='https://test.com'&gt;AND experience&lt;/a&gt;">
+	</GetAnchorLinksCountFromHtmlContent_DataDriven>
+</UrlAnalysisServiceTestData>
