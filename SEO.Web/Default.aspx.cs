@@ -14,7 +14,7 @@ namespace SEO.Web
 	{
 		private const string SortDirectionKeyPrefix = "SortDirection_";
 		private const string UnsafeErrorKey = "UNSAFE";
-		private const string UnknownErrorKey = "UNSAFE";
+		private const string UnknownErrorKey = "UNKNOWN";
 
 		private readonly ITextAnalysisService _textAnalysisService;
 		private readonly IUrlAnalysisService _urlAnalysisService;
