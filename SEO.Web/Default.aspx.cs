@@ -124,6 +124,12 @@ namespace SEO.Web
 		{
 			var wordsCountData = _textAnalysisService.GetWordsCountData(InputText.Text, FilterStopWords.Checked);
 
+			if (!wordsCountData.Any())
+			{
+				ErrorMessage.Text = "Something went wrong while analyzing the text. Please retype your input.";
+				return false;
+			}
+
 			var selectedCalculationOptions = GetSelectedCalculationOptions();
 
 			Task.WaitAll(
